@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Bin Advisor (Enhanced)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f9f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 25px 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      width: 340px;
+      text-align: center;
+    }
+    h2 { color: #2b6b2b; }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover { background-color: #3e8e41; }
+    .result {
+      margin-top: 15px;
+      background-color: #e9f7ef;
+      padding: 10px;
+      border-radius: 5px;
+      word-wrap: break-word;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>♻️ Smart Bin Advisor</h2>
+    <p>Enter the item you want to throw away:</p>
+    <input type="text" id="itemInput" placeholder="e.g., plastic bottle">
+    <button onclick="checkWaste()">Check Bin</button>
+    <div id="output" class="result"></div>
+    <div id="error" class="error"></div>
+  </div>
+
+  <script>
+    function checkWaste() {
+      let item = document.getElementById("itemInput").value.trim().toLowerCase();
+      let output = document.getElementById("output");
+      let error = document.getElementById("error");
+      
+      // Reset messages
+      output.innerHTML = "";
+      error.innerHTML = "";
+
+      // 🟡 EDGE CASE 1: Empty input
+      if (item === "") {
+        error.textContent = "⚠️ Please enter an item name.";
+        return;
+      }
+
+      // 🧠 AI-based classification
+      let category = "";
+      let tip = "";
+
+      if (item.includes("bottle") || item.includes("wrapper") || item.includes("bag") || item.includes("straw") || item.includes("packet")) {
+        category = "Plastic Waste";
+        tip = "Clean and dry before recycling to avoid contamination.";
+      } else if (item.includes("apple") || item.includes("banana") || item.includes("food") || item.includes("vegetable") || item.includes("bread") || item.includes("leftover")) {
+        category = "Organic Waste";
+        tip = "Compost organic waste to create natural fertilizer!";
+      } else if (item.includes("paper") || item.includes("book") || item.includes("cardboard") || item.includes("newspaper")) {
+        category = "Paper Waste";
+        tip = "Keep paper dry for easier recycling.";
+      } else if (item.includes("jar") || item.includes("glass") || item.includes("bottle glass")) {
+        category = "Glass Waste";
+        tip = "Separate colored and clear glass before disposal.";
+      } else if (item.includes("battery") || item.includes("bulb") || item.includes("paint") || item.includes("chemical")) {
+        category = "Hazardous Waste";
+        tip = "Dispose of these at an authorized collection center.";
+      } else {
+        // 🟢 EDGE CASE 2: Unknown input
+        category = "General Waste";
+        tip = "If unsure, check your local recycling guidelines.";
+      }
+
+      // 🟣 EDGE CASE 3: Strange input (numbers, symbols)
+      if (!/[a-zA-Z]/.test(item)) {
+        category = "Invalid Input";
+        tip = "Please enter a valid item name (letters only).";
+      }
+
+      // Output result
+      output.innerHTML = `
+        <strong>Item:</strong> ${item}<br>
+        <strong>Category:</strong> ${category}<br>
+        <strong>Tip:</strong> ${tip}
+      `;
+    }
+
+    // ✅ Future Improvements:
+    // - Connect to ML model for better text classification
+    // - Add backend (Node/Flask) to store user entries
+    // - Add image upload for automatic waste detection
+  </script>
+</body>
+</html>
